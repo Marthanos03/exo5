@@ -8,5 +8,6 @@ SessionLocal = sessionmaker(engine)
 
 
 def get_db():
+    """get the database"""
     db = SessionLocal()
     return db

@@ -6,6 +6,7 @@ Base = declarative_base()
 
 
 class Booking(Base):
+    """booking database"""
     __tablename__ = "bookings"
 
     id = Column(Integer, primary_key=True, index=True)

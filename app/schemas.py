@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class BookingBase(BaseModel):
+    """booking base colomn's database"""
     passenger_name: str
     flight_number: str
     departure: str
