@@ -19,6 +19,14 @@ class BookingUpdate(BookingBase):
     pass
 
 
+class BookingPatch(BaseModel):
+    passenger_name: str | None = None
+    flight_number: str | None = None
+    departure: str | None = None
+    destination: str | None = None
+    date: datetime | None = None
+
+
 class Booking(BookingBase):
     id: int
 
