@@ -14,4 +14,4 @@ class Booking(Base):
     flight_number = Column(String, index=True)
     departure = Column(String, index=True)
     destination = Column(String, index=True)
-    date = Column(DateTime, default=datetime.datetime)
+    date = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
