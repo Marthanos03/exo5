@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: flight_booking_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: uvicorn src.app.main:app --host 0.0.0.0 --port 8010
+    volumes:
+      - .:/src/app
+    ports:
+      - "8010:8010"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

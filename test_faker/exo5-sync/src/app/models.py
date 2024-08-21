@@ -1,7 +1,6 @@
-import datetime
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-
+import datetime
 
 Base = declarative_base()
 
@@ -15,12 +14,4 @@ class Booking(Base):
     flight_number = Column(String, index=True)
     departure = Column(String, index=True)
     destination = Column(String, index=True)
-    date = Column(DateTime(timezone=True), default=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=2))
-
-
-class User(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    date = Column(DateTime, default=datetime.datetime)
