@@ -62,22 +62,34 @@ async def delete_booking(db: AsyncSession, booking_id: int):
     await db.commit()
     return db_booking
 
-async def signup(db: AsyncSession, user: schemas.UserCreate):
+
+async def signup(db: AsyncSession, user: schemas.UserCreate) -> schemas.User:
+    """signup"""
     query = await db.execute(select(models.User).filter(models.User.username == user.username))
     db_user = query.scalar_one_or_none()
     if db_user:
         raise exceptions.UserAlreadyExistException(user.username)
     hashed_password = get_password_hash(user.password)
-    db_user = models.User(username=user.username, hashed_password=hashed_password)
+    db_user = models.User(username=user.username, hashed_password=hashed_password, role=user.role)
     db.add(db_user)
     await db.commit()
     await db.refresh(db_user)
-    return user.username
+    return db_user
 
 
-async def login(db: AsyncSession, user: schemas.UserCreate,):
+async def login(db: AsyncSession, user: schemas.UserLog) -> schemas.User:
+    """login"""
     query = await db.execute(select(models.User).filter(models.User.username == user.username))
     db_user = query.scalar_one_or_none()
     if not db_user or not verify_password(user.password, db_user.hashed_password):
         raise exceptions.InvalidCredentialsException(user.username)
-    return user.username
+    return db_user
+
+
+async def is_admin(db: AsyncSession, user: schemas.UserLog) -> bool:
+    """chec if the user is an admin"""
+    query = await db.execute(select(models.User).filter(models.User.username == user.username))
+    db_user = query.scalar_one_or_none()
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise exceptions.InvalidCredentialsException(user.username)
+    return schemas.IsAdmin(is_admin=db_user.role == "admin")

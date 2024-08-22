@@ -1,5 +1,8 @@
 <template>
     <div>
+      <nav>
+        <RouterLink to="/Admin">Home</RouterLink>
+      </nav>
       <h2>All Bookings</h2>
       <ul>
         <li v-for="booking in bookings" :key="booking.id">

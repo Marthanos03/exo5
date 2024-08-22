@@ -34,10 +34,25 @@ class Booking(BookingBase):
         orm_mode = True
 
 
-class UserCreate(BaseModel):
+class UserBase(BaseModel):
     username: str
+
+
+class UserCreate(UserBase):
+    password: str
+    role: str = "user"
+
+
+class UserLog(UserBase):
     password: str
 
 
-class UserOut(BaseModel):
-    username: str
+class User(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class IsAdmin(BaseModel):
+    is_admin: bool

@@ -34,17 +34,24 @@ app.add_middleware(
 )
 
 
-@app.post("/signup/", response_model=str)
+@app.post("/signup/", response_model=schemas.User)
 async def signup(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
     """endpoint to sigunp"""
     res = await crud.signup(db, user)
     return res
 
 
-@app.post("/login/", response_model=str)
-async def login(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+@app.post("/login/", response_model=schemas.User)
+async def login(user: schemas.UserLog, db: AsyncSession = Depends(get_db)):
     """endpoint to login"""
     res = await crud.login(db, user)
+    return res
+
+
+@app.post("/is_admin/", response_model=schemas.IsAdmin)
+async def is_admin(user: schemas.UserLog, db: AsyncSession = Depends(get_db)):
+    """endpoint to login"""
+    res = await crud.is_admin(db, user)
     return res
 
 
@@ -59,26 +66,26 @@ def booking_not_found_exception_handler(request: Request, exc: exceptions.Bookin
 
 @app.exception_handler(exceptions.BookingImpossibleDateException)
 def booking_impossible_date_exception_handler(request: Request, exc: exceptions.BookingImpossibleDateException):
-    """returns a 404 error"""
+    """returns a 400 error"""
     return JSONResponse(
-        status_code=404,
+        status_code=400,
         content={"detail": f"Booking with ID {exc.booking_id} has a date that is already passed."},
     )
 
 
 @app.exception_handler(exceptions.InvalidCredentialsException)
 def invalid_credentials_handler(request: Request, exc: exceptions.InvalidCredentialsException):
-    """returns a 404 error"""
+    """returns a 400 error"""
     return JSONResponse(
-        status_code=404,
+        status_code=400,
         content={"detail": f"Username {exc.username} or password is invalid."},
     )
 
 
 @app.exception_handler(exceptions.UserAlreadyExistException)
 def user_already_exist_exception_handler(request: Request, exc: exceptions.UserAlreadyExistException):
-    """returns a 404 error"""
+    """returns a 400 error"""
     return JSONResponse(
-        status_code=404,
+        status_code=400,
         content={"detail": f"Username {exc.username} is already taken."},
     )
